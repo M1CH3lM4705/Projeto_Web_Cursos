@@ -131,14 +131,14 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
 DEFAULT_FROM_EMAIL = 'Nome <michel.mef@gmail.com>'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'michel.mef@gmail.com'
-EMAIL_HOST_PASSWORD = 'g5h4q1x8michelg20natalia'
-EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = 'michel.mef@gmail.com'
+#EMAIL_HOST_PASSWORD = 'g5h4q1x8michelg20natalia'
+#EMAIL_PORT = 587
 
 CONTACT_EMAIL = 'contato@simplemooc.com'   
 

@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 #from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from core.mail import send_email_template
+from core.utils import generate_hash_key
+from .models import PasswordReset
 
 User = get_user_model()
 
@@ -21,6 +24,28 @@ User = get_user_model()
     #    if commit:
     #        user.save()
     #    return user
+
+class PasswordResetForm(forms.Form):
+
+    email = forms.EmailField(label='E-mail')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            return email
+        raise forms.ValidationError('Nenhum usúario encontrado com este e-email')
+    
+    def save(self):
+        user = User.objects.get(email=self.cleaned_data['email'])
+        key = generate_hash_key(user.username)
+        reset = PasswordReset(key=key, user=user)
+        reset.save()
+        template_name = 'registration/password_reset_mail.html'
+        subject = 'Criar nova senha no Simple MOOC'
+        context = {
+            'reset':reset,
+        }
+        send_email_template(subject, template_name, context, [user.email])
 
 class RegisterForm(forms.ModelForm):
 
