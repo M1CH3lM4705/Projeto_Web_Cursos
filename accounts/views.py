@@ -7,6 +7,7 @@ from django.contrib import messages
 from .forms import RegisterForm, EditAccountForm, PasswordResetForm
 from .models import PasswordReset
 from core.utils import generate_hash_key
+from courses.models import Enrollment
 
 # Create your views here.
 
@@ -15,7 +16,8 @@ User = get_user_model
 @login_required
 def dashboard(request):#Carrega pagina do usuario logado
     template_name = 'registration/dashboard.html'
-    return render(request, template_name)
+    context = {}
+    return render(request, template_name, context)
 
 def register(request):#Funçao que registra novo usuario
     template_name = 'registration/register.html'
