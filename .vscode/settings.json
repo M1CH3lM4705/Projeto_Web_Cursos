@@ -1,0 +1,10 @@
+{
+    "git.ignoreLimitWarning": true,
+    "python.pythonPath": "/home/michelmef/my_app/vDjango/bin/python",
+    "launch": {
+
+    
+    },
+    "python.linting.pylintPath": "pylint_django",
+    "python.linting.pylintEnabled": true,
+}
