@@ -1,10 +1,5 @@
 {% extends 'registration/dashboard.html' %}
 
-{% block breadcrumb %}
-    {{ block.super }}
-    <li>/</li>
-    <li><a href="{% url 'accounts:edit' %}">Editar Conta</a></li>
-{% endblock %}
 
 {% block dashboard_content %}
 <form class="pure-form pure-form-stacked" method="POST">{% csrf_token %}

@@ -44,6 +44,22 @@ def enrollment(request, slug):
     return redirect('accounts:dashboard')
 
 @login_required
+def undo_enrollment(request, slug):
+    course = get_object_or_404(Course, slug=slug)
+    enrollment = get_object_or_404(Enrollment, 
+            user=request.user, course=course)
+    if request.method == 'POST':
+        enrollment.delete()
+        messages.success(request, 'Sua inscrição foi cancelada com sucesso.')
+        return redirect('accounts:dashboard')
+    template = 'courses/undo_enrollment.html'
+    context = {
+        'enrollment':enrollment,
+        'course':course,
+    }
+    return render(request, template, context)
+
+@login_required
 def anuncio(request, slug):
     course = get_object_or_404(Course, slug=slug)
     if not request.user.is_staff:
@@ -53,6 +69,8 @@ def anuncio(request, slug):
             messages.error(requesta, 'A sua inscrição está pendente')
             return redirect('accounts:dashboard')
     template = 'courses/anuncios.html'
-    context = {}
+    context = {
+        'course':course,
+    }
     return render(request, template, context)
 
