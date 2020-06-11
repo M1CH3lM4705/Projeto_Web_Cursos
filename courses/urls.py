@@ -9,4 +9,7 @@ urlpatterns = [
     path('<slug:slug>/inscricao/', views.enrollment, name='enrollment'),
     path('<slug:slug>/cancelar-inscricao/', views.undo_enrollment, name='undo_enrollment'),
     path('<slug:slug>/anuncios/', views.anuncio, name='anuncios'),
+    path('<slug:slug>/anuncios/<int:pk>/', views.show_announcement, name='show_anuncios'),
+    path('<slug:slug>/aulas/', views.lessons, name='lessons'),
+    path('<slug:slug>/aulas/<int:pk>/', views.lesson, name='lesson'),
 ]

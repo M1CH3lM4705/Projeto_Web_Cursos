@@ -2,6 +2,7 @@ from django import forms
 from django.core.mail import send_mail
 from django.conf import settings
 from core.mail import send_email_template
+from .models import Comment
 
 
 class ContacCourse(forms.Form):
@@ -24,3 +25,9 @@ class ContacCourse(forms.Form):
             [settings.CONTACT_EMAIL])
         
 
+class ComentForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Comment
+        fields = ['comment']

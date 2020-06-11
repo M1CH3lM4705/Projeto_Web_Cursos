@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from courses.models import Course, Enrollment
-from .forms import ContacCourse
+from courses.models import Course, Enrollment, Announcement
+from .forms import ContacCourse, ComentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from courses.decorators import enrollment_required
 
 # Create your views here.
 def index(request):#função que traz todos os objetos tabela cursos
@@ -60,17 +61,66 @@ def undo_enrollment(request, slug):
     return render(request, template, context)
 
 @login_required
+@enrollment_required
 def anuncio(request, slug):
-    course = get_object_or_404(Course, slug=slug)
-    if not request.user.is_staff:
-        enrollment = get_object_or_404(Enrollment, 
-            user=request.user, course=course)
-        if not enrollment.is_aproved():
-            messages.error(requesta, 'A sua inscrição está pendente')
-            return redirect('accounts:dashboard')
+    course = request.course
     template = 'courses/anuncios.html'
     context = {
         'course':course,
+        'announcements':course.announcements.all()
+    }
+    return render(request, template, context)
+
+@login_required
+@enrollment_required
+def show_announcement(request, slug, pk):
+    course = request.course
+    announcement = get_object_or_404(course.announcements.all(), pk=pk)
+    form = ComentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.announcement = announcement
+        comment.save()
+        form = ComentForm()
+        messages.success(request,'Seu comentario foi salvo com sucesso')
+    template = 'courses/show_announcement.html'
+    
+    context = {
+        'course':course,
+        'announcement':announcement,
+        'form':form
+    }
+    return render(request, template, context)
+
+
+@login_required
+@enrollment_required
+def lessons(request, slug):
+    course = request.course
+    template = 'courses/lessons.html'
+    lessons = course.release_lessons()
+    if request.user.is_staff:
+        lessons = course.lessons.all()
+    context = {
+        'course':course,
+        'lessons':lessons
+    }
+    return render(request, template, context)
+
+
+@login_required
+@enrollment_required
+def lesson(request, slug, pk):
+    course = request.course
+    lesson = get_object_or_404(Lesson, pk=pk, course=course)
+    if not request.user.is_staff and not lesson.is_available():
+        messages.error(request, 'Esta aula não está disponível')
+        return redirect('courses:lessons', slug=course.slug)
+    template = 'courses/lesson.html'
+    context = {
+        'course':course,
+        'lesson':lesson
     }
     return render(request, template, context)
 
